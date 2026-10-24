@@ -1,6 +1,7 @@
 let archive = null;
 
-const state = { path: [], query: "", sortKey: "name", sortAsc: true, version: 0 };
+const PAGE_SIZE = 10;
+const state = { path: [], query: "", sortKey: "name", sortAsc: true, version: 0, page: 0 };
 
 const els = {
   breadcrumb: document.getElementById("breadcrumb"),
@@ -8,6 +9,7 @@ const els = {
   stats: document.getElementById("stats"),
   list: document.getElementById("filelist"),
   empty: document.getElementById("empty"),
+  pager: document.getElementById("pager"),
   footer: document.getElementById("footer")
 };
 
@@ -114,6 +116,7 @@ function renderBreadcrumb() {
     btn.textContent = p.name;
     btn.addEventListener("click", () => {
       state.path = state.path.slice(0, p.depth + 1);
+      state.page = 0;
       render();
     });
     els.breadcrumb.appendChild(btn);
@@ -165,6 +168,7 @@ function rowFor(e) {
     tdAction.appendChild(chev);
     const open = () => {
       state.path.push(e);
+      state.page = 0;
       render();
     };
     tr.addEventListener("click", open);
@@ -207,9 +211,46 @@ function renderRows(folder) {
     return 0;
   });
 
+  const pageCount = Math.max(1, Math.ceil(entries.length / PAGE_SIZE));
+  if (state.page >= pageCount) state.page = pageCount - 1;
+  const start = state.page * PAGE_SIZE;
+  const pageEntries = entries.slice(start, start + PAGE_SIZE);
+
   els.list.innerHTML = "";
   els.empty.hidden = entries.length !== 0;
-  for (const e of entries) els.list.appendChild(rowFor(e));
+  for (const e of pageEntries) els.list.appendChild(rowFor(e));
+  renderPager(pageCount);
+}
+
+function renderPager(pageCount) {
+  els.pager.innerHTML = "";
+  els.pager.hidden = pageCount <= 1;
+  if (pageCount <= 1) return;
+
+  const make = (label, opts) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = label;
+    if (opts.active) b.className = "active";
+    if (opts.disabled) b.disabled = true;
+    else b.addEventListener("click", opts.onClick);
+    return b;
+  };
+
+  els.pager.appendChild(make("‹", {
+    disabled: state.page === 0,
+    onClick: () => { state.page--; render(); }
+  }));
+  for (let i = 0; i < pageCount; i++) {
+    els.pager.appendChild(make(String(i + 1), {
+      active: i === state.page,
+      onClick: () => { state.page = i; render(); }
+    }));
+  }
+  els.pager.appendChild(make("›", {
+    disabled: state.page === pageCount - 1,
+    onClick: () => { state.page++; render(); }
+  }));
 }
 
 function renderSortIndicators() {
@@ -272,6 +313,7 @@ function selectVersion(i) {
   if (i === state.version) return;
   state.version = i;
   state.path = [];
+  state.page = 0;
   render();
   renderFooter();
 }
@@ -296,12 +338,14 @@ document.querySelectorAll("th.sortable").forEach((th) => {
     const key = th.dataset.sort;
     if (key === state.sortKey) state.sortAsc = !state.sortAsc;
     else { state.sortKey = key; state.sortAsc = true; }
+    state.page = 0;
     render();
   });
 });
 
 els.search.addEventListener("input", (e) => {
   state.query = e.target.value;
+  state.page = 0;
   render();
 });
 
