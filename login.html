@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập — Archive</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .auth-wrap {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .auth-card {
+      width: min(400px, 100%);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 38px 34px 30px;
+      box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.8);
+    }
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .auth-logo svg { width: 26px; height: 26px; }
+    .auth-title { text-align: center; font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+    .auth-sub { text-align: center; color: var(--muted); font-size: 13.5px; margin: 0 0 26px; }
+    .field { margin-bottom: 15px; }
+    .field label { display: block; font-size: 12.5px; color: var(--muted); margin-bottom: 7px; }
+    .field input {
+      width: 100%;
+      padding: 11px 13px;
+      border-radius: 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 14px;
+      font-family: var(--sans);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .field input:focus {
+      border-color: rgba(232, 185, 63, 0.5);
+      box-shadow: 0 0 0 3px var(--gold-soft);
+    }
+    .error { display: none; color: var(--red); font-size: 13px; margin: -6px 0 14px; }
+    .submit {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 11px;
+      background: var(--gold);
+      color: #0b0e14;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: var(--sans);
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+    }
+    .submit:hover { transform: translateY(-1px); box-shadow: 0 10px 26px -10px rgba(232, 185, 63, 0.5); filter: brightness(1.05); }
+    .submit:disabled { opacity: 0.6; cursor: default; transform: none; box-shadow: none; filter: none; }
+    .back { display: block; text-align: center; margin-top: 20px; color: var(--muted); font-size: 13px; text-decoration: none; }
+    .back:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 8v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8"/>
+          <path d="M3 8l2-4h14l2 4"/>
+          <path d="M3 8h18"/>
+          <path d="M10 12h4"/>
+        </svg>
+      </div>
+      <h1 class="auth-title">Archive</h1>
+      <p class="auth-sub">Đăng nhập quản trị viên</p>
+
+      <form id="form-login" novalidate>
+        <div class="field">
+          <label for="login-username">Tên đăng nhập</label>
+          <input type="text" id="login-username" autocomplete="username" spellcheck="false">
+        </div>
+        <div class="field">
+          <label for="login-password">Mật khẩu</label>
+          <input type="password" id="login-password" autocomplete="current-password">
+        </div>
+        <div class="error" id="login-error"></div>
+        <button class="submit" type="submit" id="login-submit">Đăng nhập</button>
+      </form>
+
+      <a class="back" href="index.html">&larr; Quay lại kho lưu trữ</a>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    const formLogin = document.getElementById("form-login");
+    const errorEl = document.getElementById("login-error");
+    const submitBtn = document.getElementById("login-submit");
+
+    function showError(msg) {
+      errorEl.textContent = msg;
+      errorEl.style.display = "block";
+    }
+
+    if (Auth.current()) location.href = "index.html";
+
+    formLogin.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorEl.style.display = "none";
+      const username = document.getElementById("login-username").value.trim();
+      const password = document.getElementById("login-password").value;
+      if (!username || !password) return showError("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Đang xử lý…";
+      const res = await Auth.login(username, password);
+      if (res.ok) location.href = "index.html";
+      else {
+        showError(res.error || "Đăng nhập thất bại.");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Đăng nhập";
+      }
+    });
+  </script>
+</body>
+</html>
