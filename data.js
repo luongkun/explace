@@ -39,7 +39,12 @@ window.ARCHIVE = {
     {
       name: "Tools",
       versions: [
-        { label: "Tất cả", entries: [] }
+        {
+          label: "Tất cả",
+          entries: [
+            { type: "file", name: "AutoDiscordQuest.zip", size: 22472939, date: "2026-10-24", url: "files/AutoDiscordQuest.zip" }
+          ]
+        }
       ]
     }
   ]
