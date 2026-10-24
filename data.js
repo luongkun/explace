@@ -18,7 +18,8 @@ window.ARCHIVE = {
                 { type: "file", name: "setup.exe", size: 48200000, date: "2026-10-22", url: "files/setup.exe" }
               ]
             },
-            { type: "file", name: "notes.txt", size: 1024, date: "2026-10-23", url: "files/notes.txt" }
+            { type: "file", name: "notes.txt", size: 1024, date: "2026-10-23", url: "files/notes.txt" },
+            { type: "file", name: "Slinky.zip", size: 6190753, date: "2026-10-19", url: "files/Slinky.zip" }
           ]
         },
         {
