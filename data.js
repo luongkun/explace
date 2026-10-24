@@ -46,6 +46,29 @@ window.ARCHIVE = {
           ]
         }
       ]
+    },
+    {
+      name: "Resource Packs",
+      versions: [
+        { label: "Tất cả", entries: [] }
+      ]
+    },
+    {
+      name: "Screen Share",
+      versions: [
+        {
+          label: "Tất cả",
+          entries: [
+            { type: "file", name: "BAMParser.exe", size: 3115928, date: "2026-10-21", url: "files/BAMParser.exe" },
+            { type: "file", name: "Everything-1.4.1.1032.x86-Setup.exe", size: 1901912, date: "2026-10-13", url: "files/Everything-1.4.1.1032.x86-Setup.exe" },
+            { type: "file", name: "USBDeview.exe", size: 132096, date: "2025-05-14", url: "files/USBDeview.exe" },
+            { type: "file", name: "espouken.exe", size: 1567232, date: "2026-10-21", url: "files/espouken.exe" },
+            { type: "file", name: "lsrshsetup.exe", size: 82272888, date: "2026-10-13", url: "files/lsrshsetup.exe" },
+            { type: "file", name: "luyten-0.5.4.exe", size: 4396803, date: "2026-10-13", url: "files/luyten-0.5.4.exe" },
+            { type: "file", name: "systeminformer-4.0.26241.138-release-setup.exe", size: 30354960, date: "2026-10-13", url: "files/systeminformer-4.0.26241.138-release-setup.exe" }
+          ]
+        }
+      ]
     }
   ]
 };
