@@ -142,7 +142,8 @@ function rowFor(e) {
   tr.className = "row" + (isFolder ? " folder" : "");
 
   const tdName = document.createElement("td");
-  tdName.className = "cell-name";
+  const nameCell = document.createElement("div");
+  nameCell.className = "cell-name";
   const icon = document.createElement("span");
   icon.className = "icon";
   icon.style.color = TYPE_COLOR[type];
@@ -151,8 +152,9 @@ function rowFor(e) {
   fname.className = "fname";
   fname.textContent = e.name;
   fname.title = e.name;
-  tdName.appendChild(icon);
-  tdName.appendChild(fname);
+  nameCell.appendChild(icon);
+  nameCell.appendChild(fname);
+  tdName.appendChild(nameCell);
 
   const tdSize = document.createElement("td");
   tdSize.className = "cell-size";
