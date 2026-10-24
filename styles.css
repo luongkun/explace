@@ -160,6 +160,81 @@ body {
 
 .sep { color: var(--faint); }
 
+/* ---------- Content layout ---------- */
+.content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 16px;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  width: 200px;
+  flex: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 18px 50px -28px rgba(0, 0, 0, 0.7);
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: auto;
+}
+
+.sidebar-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--faint);
+  padding: 4px 10px 8px;
+}
+
+.cat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  background: none;
+  color: var(--muted);
+  font-size: 13.5px;
+  font-family: var(--sans);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+
+.cat-item::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--faint);
+  transition: background 0.12s ease;
+}
+
+.cat-item:hover { background: var(--surface-2); color: var(--text); }
+
+.cat-item.active {
+  background: var(--gold-soft);
+  border-color: rgba(232, 185, 63, 0.3);
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.cat-item.active::before { background: var(--gold); }
+
 /* ---------- Panel ---------- */
 .panel {
   background: var(--surface);
@@ -450,6 +525,21 @@ tbody tr.folder:hover .chev {
 /* ---------- Responsive ---------- */
 @media (max-width: 640px) {
   .app { padding: 24px 14px 24px; }
+
+  .content { flex-direction: column; }
+
+  .sidebar {
+    width: 100%;
+    flex: none;
+    padding: 10px;
+    overflow: visible;
+  }
+
+  .sidebar-title { display: none; }
+
+  .cat-list { flex-direction: row; flex-wrap: wrap; }
+
+  .cat-item { padding: 8px 12px; }
 
   thead th:nth-child(3), td:nth-child(3) { display: none; }
 

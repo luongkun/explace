@@ -1,7 +1,7 @@
 let archive = null;
 
 const PAGE_SIZE = 10;
-const state = { path: [], query: "", sortKey: "name", sortAsc: true, version: 0, page: 0 };
+const state = { category: 0, path: [], query: "", sortKey: "name", sortAsc: true, version: 0, page: 0 };
 
 const els = {
   breadcrumb: document.getElementById("breadcrumb"),
@@ -75,8 +75,12 @@ function formatDate(iso) {
   return y && m && d ? `${d}/${m}/${y}` : iso;
 }
 
+function currentCategory() {
+  return archive.categories[state.category];
+}
+
 function currentVersion() {
-  return archive.versions[state.version];
+  return currentCategory().versions[state.version] || { label: "—", entries: [] };
 }
 
 function currentFolder() {
@@ -263,6 +267,7 @@ function renderSortIndicators() {
 
 function render() {
   const folder = currentFolder();
+  renderCategories();
   renderVersions();
   renderBreadcrumb();
   renderStats(folder);
@@ -281,9 +286,10 @@ const versionMenu = document.getElementById("version-menu");
 const versionLabel = document.getElementById("version-label");
 
 function renderVersions() {
+  const versions = currentCategory().versions;
   versionLabel.textContent = currentVersion().label;
   versionMenu.innerHTML = "";
-  archive.versions.forEach((v, i) => {
+  versions.forEach((v, i) => {
     const li = document.createElement("li");
     li.className = "version-item" + (i === state.version ? " selected" : "");
     li.setAttribute("role", "option");
@@ -301,6 +307,29 @@ function renderVersions() {
     li.addEventListener("click", () => selectVersion(i));
     versionMenu.appendChild(li);
   });
+}
+
+function renderCategories() {
+  const list = document.getElementById("cat-list");
+  list.innerHTML = "";
+  archive.categories.forEach((c, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "cat-item" + (i === state.category ? " active" : "");
+    b.textContent = c.name;
+    b.addEventListener("click", () => selectCategory(i));
+    list.appendChild(b);
+  });
+}
+
+function selectCategory(i) {
+  if (i === state.category) return;
+  state.category = i;
+  state.version = 0;
+  state.path = [];
+  state.page = 0;
+  render();
+  renderFooter();
 }
 
 function setVersionOpen(open) {
