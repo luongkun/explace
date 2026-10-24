@@ -281,92 +281,15 @@ versionBtn.addEventListener("click", (e) => {
   setVersionOpen(versionMenu.hidden);
 });
 
-const accountBtn = document.getElementById("avatar-btn");
-const accountMenu = document.getElementById("account-menu");
-
-function setAccountOpen(open) {
-  accountMenu.hidden = !open;
-  accountBtn.setAttribute("aria-expanded", String(open));
-}
-
-accountBtn.addEventListener("click", (e) => {
-  e.stopPropagation();
-  setAccountOpen(accountMenu.hidden);
-});
-
 document.addEventListener("click", () => {
   setVersionOpen(false);
-  setAccountOpen(false);
 });
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     setVersionOpen(false);
-    setAccountOpen(false);
   }
 });
-
-function initials(name) {
-  return (name || "?")
-    .trim()
-    .split(/\s+/)
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-}
-
-function renderAccount() {
-  const user = Auth.current();
-  accountBtn.innerHTML = "";
-  if (user) {
-    const span = document.createElement("span");
-    span.className = "initial";
-    span.textContent = initials(user.name || user.username);
-    accountBtn.appendChild(span);
-    accountBtn.title = user.name || user.username;
-  } else {
-    accountBtn.innerHTML =
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.3 3.6-5 8-5s8 1.7 8 5"/></svg>';
-    accountBtn.title = "Tài khoản";
-  }
-
-  accountMenu.innerHTML = "";
-  if (user) {
-    const nameItem = document.createElement("li");
-    nameItem.className = "account-name";
-    nameItem.textContent = user.name || user.username;
-    accountMenu.appendChild(nameItem);
-
-    if (user.isAdmin) {
-      const manage = document.createElement("li");
-      manage.className = "account-item";
-      manage.textContent = "Quản lý";
-      manage.addEventListener("click", () => {
-        location.href = "admin.html";
-      });
-      accountMenu.appendChild(manage);
-    }
-
-    const logout = document.createElement("li");
-    logout.className = "account-item";
-    logout.textContent = "Đăng xuất";
-    logout.addEventListener("click", async () => {
-      await Auth.logout();
-      setAccountOpen(false);
-      renderAccount();
-    });
-    accountMenu.appendChild(logout);
-  } else {
-    const login = document.createElement("li");
-    login.className = "account-item";
-    login.textContent = "Đăng nhập";
-    login.addEventListener("click", () => {
-      location.href = "login.html";
-    });
-    accountMenu.appendChild(login);
-  }
-}
 
 document.querySelectorAll("th.sortable").forEach((th) => {
   th.addEventListener("click", () => {
@@ -389,23 +312,10 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-async function init() {
-  renderAccount();
-  try {
-    const res = await fetch("api/archive");
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    archive = await res.json();
-  } catch (e) {
-    els.stats.textContent = "Không tải được dữ liệu — server chưa chạy?";
-    els.empty.hidden = false;
-    els.empty.textContent = "Lỗi: " + e.message;
-    return;
-  }
+function init() {
+  archive = window.ARCHIVE;
   render();
   renderFooter();
-  Auth.me().then((u) => {
-    if (!u) renderAccount();
-  });
 }
 
 init();
