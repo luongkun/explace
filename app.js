@@ -30,14 +30,14 @@ const ICONS = {
 
 const TYPE_COLOR = {
   folder: "var(--gold)",
-  image: "var(--blue)",
-  video: "var(--purple)",
-  audio: "var(--pink)",
-  archive: "var(--orange)",
-  code: "var(--green)",
-  doc: "var(--cyan)",
-  exe: "var(--red)",
-  file: "var(--muted)"
+  image: "var(--t-image)",
+  video: "var(--t-video)",
+  audio: "var(--t-audio)",
+  archive: "var(--t-archive)",
+  code: "var(--t-code)",
+  doc: "var(--t-doc)",
+  exe: "var(--t-exe)",
+  file: "var(--t-file)"
 };
 
 const EXT = {
@@ -137,7 +137,7 @@ function renderStats(folder) {
 
 function rowFor(e) {
   const isFolder = e.type === "folder";
-  const type = typeOf(e.name);
+  const type = isFolder ? "folder" : typeOf(e.name);
   const tr = document.createElement("tr");
   tr.className = "row" + (isFolder ? " folder" : "");
 
